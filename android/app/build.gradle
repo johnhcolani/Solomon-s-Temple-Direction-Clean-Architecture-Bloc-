@@ -1,19 +1,32 @@
 plugins {
     id "com.android.application"
+<<<<<<< HEAD
     id "kotlin-android"
     // The Flutter Gradle Plugin must be applied after the Android and Kotlin Gradle plugins.
     id "dev.flutter.flutter-gradle-plugin"
 }
+=======
+    id "kotlin-android" // Required for Kotlin
+    id "dev.flutter.flutter-gradle-plugin" // Flutter Gradle Plugin must be applied after Android & Kotlin plugins
+}
+
+>>>>>>> dc2c875 (Fixed Video player and gradle)
 def keystoreProperties = new Properties()
 def keystorePropertiesFile = rootProject.file('key.properties')
 if (keystorePropertiesFile.exists()) {
     keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
 }
 
+<<<<<<< HEAD
 
 android {
     namespace = "com.johncolani.temple_direction"
     compileSdk = 34
+=======
+android {
+    namespace = "com.johncolani.temple_direction"
+    compileSdk = 34 // Set to at least 31 or higher for modern libraries
+>>>>>>> dc2c875 (Fixed Video player and gradle)
     ndkVersion = flutter.ndkVersion
 
     compileOptions {
@@ -22,6 +35,7 @@ android {
     }
 
     kotlinOptions {
+<<<<<<< HEAD
         jvmTarget = JavaVersion.VERSION_1_8
     }
 
@@ -32,6 +46,15 @@ android {
         // For more information, see: https://flutter.dev/to/review-gradle-config.
         minSdk = 21
         targetSdk = 33
+=======
+        jvmTarget = "1.8" // This ensures Kotlin compatibility
+    }
+
+    defaultConfig {
+        applicationId = "com.johncolani.temple_direction"
+        minSdk = 21 // Minimum SDK version supported
+        targetSdk = 34 // Target the latest SDK
+>>>>>>> dc2c875 (Fixed Video player and gradle)
         versionCode = 1
         versionName = "1.0"
     }
@@ -44,6 +67,7 @@ android {
             storePassword = keystoreProperties['storePassword']
         }
     }
+<<<<<<< HEAD
     buildTypes {
         release {
             // TODO: Add your own signing config for the release build.
@@ -55,4 +79,23 @@ android {
 }
 flutter {
     source = "../.."
+=======
+
+    buildTypes {
+        release {
+            signingConfig = signingConfigs.release
+            // Enable shrinking, obfuscation, and optimization
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+flutter {
+    source = "../.." // Flutter module path
+}
+
+dependencies {
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version" // Adds Kotlin standard library
+>>>>>>> dc2c875 (Fixed Video player and gradle)
 }
