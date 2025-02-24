@@ -1,14 +1,17 @@
 <<<<<<< HEAD
 =======
 buildscript {
-    ext.kotlin_version = '2.1.0' // Specify the Kotlin version
+    ext.kotlin_version = '2.0.21' // Specify the Kotlin version
     repositories {
         google()
         mavenCentral()
     }
+    tasks.withType(JavaCompile) {
+        options.compilerArgs << "-Xlint:-options"
+    }
     dependencies {
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-        classpath 'com.android.tools.build:gradle:8.1.1' // Ensure the AGP matches Kotlin
+        classpath 'com.android.tools.build:gradle:8.5.2' // Ensure the AGP matches Kotlin
     }
 }
 
@@ -18,6 +21,7 @@ allprojects {
         google()
         mavenCentral()
     }
+
 }
 
 <<<<<<< HEAD

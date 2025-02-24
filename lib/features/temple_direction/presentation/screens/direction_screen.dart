@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_compass/flutter_compass.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:video_player/video_player.dart';
 import '../bloc/direction_bloc.dart';
 import '../bloc/direction_event.dart';
@@ -33,18 +34,16 @@ class _DirectionPageState extends State<DirectionPage> {
     _listenToCompass();
     // Initialize the video player controller with the asset video
     _videoController = VideoPlayerController.asset(
-      'assets/videos/solomon_temple.mp4', // Path to the video file in assets
-    )
-      ..initialize().then((_) {
-        setState(() {}); // Update UI after video is initialized
-        _videoController.play(); // Auto-play the video
-      })
-      ..addListener(() {
-        setState(() {
-          _isVideoFinished = _videoController.value.position >=
-              _videoController.value.duration;
-        });
-      });
+      'assets/videos/solomon_temple.mp4',
+    )..initialize().then((_) {
+      setState(() {});
+      _videoController.play();
+    }).catchError((error) {
+      print("Video initialization error: $error");
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Video error: $error")),
+      );
+    });
   }
 
   @override
@@ -57,21 +56,28 @@ class _DirectionPageState extends State<DirectionPage> {
     print("Checking location services...");
     bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
     if (!serviceEnabled) {
-      print("Location services are disabled.");
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Please enable location services")),
+      );
       return;
     }
 
-    LocationPermission permission = await Geolocator.checkPermission();
-    if (permission == LocationPermission.denied) {
-      permission = await Geolocator.requestPermission();
-      if (permission == LocationPermission.denied) {
-        print("Location permission denied.");
+    var status = await Permission.location.status;
+    if (status.isDenied) {
+      status = await Permission.location.request();
+      if (status.isDenied) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text("Location permission denied")),
+        );
         return;
       }
     }
 
-    if (permission == LocationPermission.deniedForever) {
-      print("Location permission denied forever.");
+    if (status.isPermanentlyDenied) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Please enable location in settings")),
+      );
+      await openAppSettings();
       return;
     }
 
@@ -81,16 +87,17 @@ class _DirectionPageState extends State<DirectionPage> {
         desiredAccuracy: LocationAccuracy.high,
       );
       print("Current location: ${position.latitude}, ${position.longitude}");
-
       context.read<DirectionBloc>().add(GetDirectionEvent(
-            position.latitude,
-            position.longitude,
-          ));
+        position.latitude,
+        position.longitude,
+      ));
     } catch (e) {
       print("Error getting location: $e");
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Error: $e")),
+      );
     }
   }
-
   void _listenToCompass() {
     FlutterCompass.events?.listen((event) {
       setState(() {

@@ -22,15 +22,16 @@ class SolomonTempleApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final directionRepository = DirectionRepositoryImpl(
+      locationDataSource: LocationDataSource(),
+    );
+    final getDirection = GetDirection(directionRepository);
     return MultiBlocProvider(
       providers: [
         BlocProvider(
-            create: (context) => DirectionBloc(
-                    getDirection: GetDirection(DirectionRepositoryImpl(
-                  locationDataSource: LocationDataSource(),
-                ))),
-            child: const DirectionPage()),
-        BlocProvider<SplashBloc>(
+          create: (context) => DirectionBloc(getDirection: getDirection),
+        ),
+        BlocProvider(
           create: (context) => SplashBloc(),
         ),
       ],

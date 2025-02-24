@@ -1,60 +1,33 @@
 plugins {
     id "com.android.application"
-<<<<<<< HEAD
-    id "kotlin-android"
-    // The Flutter Gradle Plugin must be applied after the Android and Kotlin Gradle plugins.
-    id "dev.flutter.flutter-gradle-plugin"
-}
-=======
     id "kotlin-android" // Required for Kotlin
     id "dev.flutter.flutter-gradle-plugin" // Flutter Gradle Plugin must be applied after Android & Kotlin plugins
 }
 
->>>>>>> dc2c875 (Fixed Video player and gradle)
 def keystoreProperties = new Properties()
 def keystorePropertiesFile = rootProject.file('key.properties')
 if (keystorePropertiesFile.exists()) {
     keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
 }
 
-<<<<<<< HEAD
-
-android {
-    namespace = "com.johncolani.temple_direction"
-    compileSdk = 34
-=======
 android {
     namespace = "com.johncolani.temple_direction"
     compileSdk = 34 // Set to at least 31 or higher for modern libraries
->>>>>>> dc2c875 (Fixed Video player and gradle)
     ndkVersion = flutter.ndkVersion
 
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_11
+        targetCompatibility = JavaVersion.VERSION_11
     }
 
     kotlinOptions {
-<<<<<<< HEAD
-        jvmTarget = JavaVersion.VERSION_1_8
-    }
-
-    defaultConfig {
-        // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
-        applicationId = "com.johncolani.temple_direction"
-        // You can update the following values to match your application needs.
-        // For more information, see: https://flutter.dev/to/review-gradle-config.
-        minSdk = 21
-        targetSdk = 33
-=======
-        jvmTarget = "1.8" // This ensures Kotlin compatibility
+        jvmTarget = "11" // This ensures Kotlin compatibility
     }
 
     defaultConfig {
         applicationId = "com.johncolani.temple_direction"
         minSdk = 21 // Minimum SDK version supported
         targetSdk = 34 // Target the latest SDK
->>>>>>> dc2c875 (Fixed Video player and gradle)
         versionCode = 1
         versionName = "1.0"
     }
@@ -67,19 +40,6 @@ android {
             storePassword = keystoreProperties['storePassword']
         }
     }
-<<<<<<< HEAD
-    buildTypes {
-        release {
-            // TODO: Add your own signing config for the release build.
-            // Signing with the debug keys for now,
-            // so `flutter run --release` works.
-            signingConfig = signingConfigs.release
-        }
-    }
-}
-flutter {
-    source = "../.."
-=======
 
     buildTypes {
         release {
@@ -97,5 +57,4 @@ flutter {
 
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version" // Adds Kotlin standard library
->>>>>>> dc2c875 (Fixed Video player and gradle)
 }

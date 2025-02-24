@@ -16,7 +16,7 @@ class DirectionBloc extends Bloc<DirectionEvent, DirectionState> {
       );
 
       failureOrDirection.fold(
-            (failure) => emit(ErrorState("Could not get direction")),
+            (failure) => emit(ErrorState("Failed to fetch direction: ${failure.toString()}")),
             (direction) => emit(LoadedState(direction.bearing)),
       );
     });
