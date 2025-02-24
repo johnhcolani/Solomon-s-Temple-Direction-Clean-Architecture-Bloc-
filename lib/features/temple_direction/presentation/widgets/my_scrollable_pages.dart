@@ -1,18 +1,16 @@
-<<<<<<< HEAD
+
 import 'dart:io';
-=======
->>>>>>> dc2c875 (Fixed Video player and gradle)
+
 
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 class MyScrollablePages extends StatefulWidget {
-<<<<<<< HEAD
-=======
+
   const MyScrollablePages({super.key});
 
->>>>>>> dc2c875 (Fixed Video player and gradle)
+
   @override
   _MyScrollablePagesState createState() => _MyScrollablePagesState();
 }
@@ -37,11 +35,9 @@ class _MyScrollablePagesState extends State<MyScrollablePages> {
                   // First Page with the Scrollable Text
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 20.0),
-<<<<<<< HEAD
-                    child: Container(
-=======
-                    child: SizedBox(
->>>>>>> dc2c875 (Fixed Video player and gradle)
+
+        child: Container(
+
                       height: isTablet ? screenHeight * 0.4 : screenHeight * 0.3,
                       child: SingleChildScrollView(
                         child: RichText(
@@ -74,11 +70,7 @@ class _MyScrollablePagesState extends State<MyScrollablePages> {
                   // Second Page
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 20.0),
-<<<<<<< HEAD
-                    child: Container(
-=======
-                    child: SizedBox(
->>>>>>> dc2c875 (Fixed Video player and gradle)
+        child: Container(
                       height: isTablet ? screenHeight * 0.4 : screenHeight * 0.3,
                       child: SingleChildScrollView(
                         child: RichText(
@@ -110,11 +102,7 @@ class _MyScrollablePagesState extends State<MyScrollablePages> {
                   // Third Page
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 20.0),
-<<<<<<< HEAD
-                    child: Container(
-=======
-                    child: SizedBox(
->>>>>>> dc2c875 (Fixed Video player and gradle)
+        child: Container(
                       height: isTablet ? screenHeight * 0.4 : screenHeight * 0.3,
                       child: SingleChildScrollView(
                         child: RichText(
@@ -146,11 +134,7 @@ class _MyScrollablePagesState extends State<MyScrollablePages> {
                   // Fourth Page
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 20.0),
-<<<<<<< HEAD
                     child: Container(
-=======
-                    child: SizedBox(
->>>>>>> dc2c875 (Fixed Video player and gradle)
                       height: isTablet ? screenHeight * 0.4 : screenHeight * 0.3,
                       child: SingleChildScrollView(
                         child: RichText(
@@ -198,11 +182,7 @@ class _MyScrollablePagesState extends State<MyScrollablePages> {
             SmoothPageIndicator(
               controller: _pageController,
               count: 4,
-<<<<<<< HEAD
-              effect: ExpandingDotsEffect(
-=======
               effect: const ExpandingDotsEffect(
->>>>>>> dc2c875 (Fixed Video player and gradle)
                 activeDotColor: Color(0xff85b0c5),
                 dotColor: Colors.grey,
                 dotHeight: 8,
@@ -210,6 +190,7 @@ class _MyScrollablePagesState extends State<MyScrollablePages> {
                 spacing: 5.0,
               ),
             ),
+
             const SizedBox(height: 20),
           ],
         );

@@ -199,11 +199,9 @@ class _DirectionPageState extends State<DirectionPage> {
                                 height: isTablet
                                     ? 280
                                     : (Platform.isAndroid ? 170 : 190),
-<<<<<<< HEAD
-                                child: MyScrollablePages(),
-=======
+
                                 child: const MyScrollablePages(),
->>>>>>> dc2c875 (Fixed Video player and gradle)
+
                               ),
                               Padding(
                                 padding: const EdgeInsets.all(8.0),
