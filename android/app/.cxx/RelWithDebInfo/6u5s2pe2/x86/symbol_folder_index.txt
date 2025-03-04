@@ -1,0 +1,1 @@
+/Users/johncolani/flutter_project_oct_24/Solomon Temple/build/app/intermediates/cxx/RelWithDebInfo/6u5s2pe2/obj/x86

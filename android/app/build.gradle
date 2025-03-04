@@ -28,15 +28,15 @@ android {
         applicationId = "com.johncolani.temple_direction"
         minSdk = 21 // Minimum SDK version supported
         targetSdk = 34 // Target the latest SDK
-        versionCode = 1
-        versionName = "1.0"
+        versionCode = 8
+        versionName = "8.0"
     }
 
     signingConfigs {
         release {
             keyAlias = keystoreProperties['keyAlias']
             keyPassword = keystoreProperties['keyPassword']
-            storeFile = keystoreProperties['storeFile'] ? file(keystoreProperties['storeFile']) : null
+            storeFile = file(keystoreProperties['storeFile'])
             storePassword = keystoreProperties['storePassword']
         }
     }
@@ -45,6 +45,9 @@ android {
         release {
             signingConfig = signingConfigs.release
             // Enable shrinking, obfuscation, and optimization
+            ndk {
+                debugSymbolLevel 'FULL'
+            }
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }

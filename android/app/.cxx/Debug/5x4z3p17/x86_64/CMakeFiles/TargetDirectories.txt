@@ -1,0 +1,2 @@
+/Users/johncolani/flutter_project_oct_24/Solomon Temple/android/app/.cxx/Debug/5x4z3p17/x86_64/CMakeFiles/edit_cache.dir
+/Users/johncolani/flutter_project_oct_24/Solomon Temple/android/app/.cxx/Debug/5x4z3p17/x86_64/CMakeFiles/rebuild_cache.dir
