@@ -26,10 +26,8 @@
 	<string>$(FLUTTER_BUILD_NUMBER)</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
-	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-	<string>This app uses your location to provide customized prayer time notifications and compass directions.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-    <string>This app requires location access to provide location-based services like compass and notifications.</string>
+	<string>This app needs your location to calculate the direction to the Temple of Solomon for prayer guidance. Your location is only used when the app is open and is never tracked in the background.</string>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
 	<key>UILaunchStoryboardName</key>

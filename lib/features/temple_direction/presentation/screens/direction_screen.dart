@@ -36,14 +36,14 @@ class _DirectionPageState extends State<DirectionPage> {
     _videoController = VideoPlayerController.asset(
       'assets/videos/solomon_temple.mp4',
     )..initialize().then((_) {
-      setState(() {});
-      _videoController.play();
-    }).catchError((error) {
-      print("Video initialization error: $error");
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Video error: $error")),
-      );
-    });
+        setState(() {});
+        _videoController.play();
+      }).catchError((error) {
+        print("Video initialization error: $error");
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("Video error: $error")),
+        );
+      });
   }
 
   @override
@@ -56,28 +56,54 @@ class _DirectionPageState extends State<DirectionPage> {
     print("Checking location services...");
     bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
     if (!serviceEnabled) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Please enable location services")),
-      );
+      if (mounted) {
+        context.read<DirectionBloc>().add(GetDirectionEvent(0, 0));
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text("Please enable location services"),
+            duration: Duration(seconds: 5),
+          ),
+        );
+      }
       return;
     }
 
     var status = await Permission.location.status;
+    print("Current permission status: $status");
+
     if (status.isDenied) {
+      print("Permission denied, requesting...");
       status = await Permission.location.request();
+      print("Permission after request: $status");
       if (status.isDenied) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text("Location permission denied")),
-        );
+        if (mounted) {
+          context.read<DirectionBloc>().add(GetDirectionEvent(0, 0));
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text(
+                  "Location permission is required. Please allow location access to use this app."),
+              duration: Duration(seconds: 5),
+            ),
+          );
+        }
         return;
       }
     }
 
     if (status.isPermanentlyDenied) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Please enable location in settings")),
-      );
-      await openAppSettings();
+      if (mounted) {
+        context.read<DirectionBloc>().add(GetDirectionEvent(0, 0));
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: const Text("Please enable location in settings"),
+            duration: const Duration(seconds: 5),
+            action: SnackBarAction(
+              label: 'Open Settings',
+              onPressed: () => openAppSettings(),
+            ),
+          ),
+        );
+      }
       return;
     }
 
@@ -85,24 +111,43 @@ class _DirectionPageState extends State<DirectionPage> {
     try {
       Position position = await Geolocator.getCurrentPosition(
         desiredAccuracy: LocationAccuracy.high,
+        timeLimit: const Duration(seconds: 10),
       );
       print("Current location: ${position.latitude}, ${position.longitude}");
-      context.read<DirectionBloc>().add(GetDirectionEvent(
-        position.latitude,
-        position.longitude,
-      ));
+      if (mounted) {
+        context.read<DirectionBloc>().add(GetDirectionEvent(
+              position.latitude,
+              position.longitude,
+            ));
+      }
     } catch (e) {
       print("Error getting location: $e");
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Error: $e")),
-      );
+      if (mounted) {
+        context.read<DirectionBloc>().add(GetDirectionEvent(0, 0));
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text("Error getting location: $e"),
+            duration: const Duration(seconds: 5),
+          ),
+        );
+      }
     }
   }
+
   void _listenToCompass() {
     FlutterCompass.events?.listen((event) {
-      setState(() {
-        _currentHeading = event.heading ?? 0;
-      });
+      if (mounted) {
+        setState(() {
+          double rawHeading = event.heading ?? 0;
+          // Android reports screen-relative heading, iOS reports world-relative
+          // In portrait mode, Android needs -90° correction
+          _currentHeading =
+              Platform.isAndroid ? (rawHeading - 90 + 360) % 360 : rawHeading;
+          print("🧭 Raw heading: ${rawHeading.toStringAsFixed(2)}°");
+          print(
+              "🧭 Adjusted heading: ${_currentHeading.toStringAsFixed(2)}° (${Platform.isAndroid ? 'Android -90°' : 'iOS normal'})");
+        });
+      }
     });
   }
 
@@ -175,7 +220,19 @@ class _DirectionPageState extends State<DirectionPage> {
                         child: const CircularProgressIndicator(),
                       );
                     } else if (state is LoadedState) {
+                      // Calculate relative direction (temple bearing minus device heading)
                       double direction = state.direction - _currentHeading;
+
+                      // Debug logging
+                      print(
+                          "🎯 Temple bearing: ${state.direction.toStringAsFixed(2)}°");
+                      print(
+                          "🧭 Device heading: ${_currentHeading.toStringAsFixed(2)}°");
+                      print(
+                          "➡️  Relative direction: ${direction.toStringAsFixed(2)}°");
+                      print(
+                          "📱 Platform: ${Platform.isIOS ? 'iOS' : 'Android'}");
+
                       return SafeArea(
                         child: SizedBox(
                           height: screenHeight,
@@ -199,14 +256,12 @@ class _DirectionPageState extends State<DirectionPage> {
                                 height: isTablet
                                     ? 280
                                     : (Platform.isAndroid ? 170 : 190),
-
                                 child: const MyScrollablePages(),
-
                               ),
                               Padding(
                                 padding: const EdgeInsets.all(8.0),
                                 child: Container(
-                                  width: screenWidth *0.85,
+                                  width: screenWidth * 0.85,
                                   decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(24),
                                     border: Border.all(
@@ -297,7 +352,44 @@ class _DirectionPageState extends State<DirectionPage> {
                     } else if (state is ErrorState) {
                       return SizedBox(
                         height: screenHeight,
-                        child: Center(child: Text(state.message)),
+                        child: Center(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              const Icon(
+                                Icons.error_outline,
+                                size: 64,
+                                color: Colors.white70,
+                              ),
+                              const SizedBox(height: 16),
+                              Padding(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 32.0),
+                                child: Text(
+                                  state.message,
+                                  textAlign: TextAlign.center,
+                                  style: const TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 16,
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(height: 24),
+                              ElevatedButton.icon(
+                                onPressed: _requestLocationAndFetchDirection,
+                                icon: const Icon(Icons.refresh),
+                                label: const Text('Try Again'),
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: const Color(0xff9dbaca),
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 32,
+                                    vertical: 16,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
                       );
                     }
                     return Container();

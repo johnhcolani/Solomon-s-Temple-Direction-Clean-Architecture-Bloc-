@@ -7,7 +7,7 @@ class SplashBloc extends Bloc<SplashEvent, SplashState> {
     on<StartSplashEvent>((event, emit) async {
       // Simulate a delay to show the splash screen
 
-      await Future.delayed(Duration(seconds: 3));
+      await Future.delayed(const Duration(seconds: 3));
 
       emit(SplashFinishedState());
     });

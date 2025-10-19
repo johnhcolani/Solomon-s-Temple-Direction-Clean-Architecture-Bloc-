@@ -7,9 +7,11 @@ import 'features/temple_direction/data/repository/temple_direction_repository_im
 import 'features/temple_direction/domain/usecases/get_direction.dart';
 import 'features/temple_direction/presentation/bloc/splash_bloc/splash_bloc.dart';
 import 'features/temple_direction/presentation/bloc/direction_bloc.dart';
-import 'features/temple_direction/presentation/screens/direction_screen.dart';
 
-void main() {
+void main() async{
+  final dataSource = LocationDataSource();
+  final bearing = await dataSource.getDirectionToTemple(40.7128, -74.0060); // New York
+  print("Bearing from NY to Temple: $bearing"); // Should print ~70°
   WidgetsFlutterBinding.ensureInitialized();
        SystemChrome.setPreferredOrientations(
       [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);

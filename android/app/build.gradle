@@ -12,7 +12,7 @@ if (keystorePropertiesFile.exists()) {
 
 android {
     namespace = "com.johncolani.temple_direction"
-    compileSdk = 34 // Set to at least 31 or higher for modern libraries
+    compileSdk = 36 // Required for geolocator_android and video_player_android
     ndkVersion = flutter.ndkVersion
 
     compileOptions {
@@ -26,10 +26,10 @@ android {
 
     defaultConfig {
         applicationId = "com.johncolani.temple_direction"
-        minSdk = 21 // Minimum SDK version supported
-        targetSdk = 34 // Target the latest SDK
-        versionCode = 8
-        versionName = "8.0"
+        minSdkVersion = flutter.minSdkVersion // Android 5.0 - supports 99%+ of devices
+        targetSdk = 36 // Target the latest SDK
+        versionCode = 22
+        versionName = "22.0"
     }
 
     signingConfigs {
